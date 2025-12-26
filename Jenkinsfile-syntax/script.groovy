@@ -16,4 +16,14 @@ def deployApp() {
     echo 'deploying the application...'
 } 
 
+def buildApp() {
+    buildJar()
+    buildImage()
+}
+
+def testApp() {
+    echo "running tests..."
+    sh 'mvn test'
+}
+
 return this
