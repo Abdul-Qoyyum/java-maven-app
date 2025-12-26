@@ -1,3 +1,13 @@
+#!/usr/bin/env groovy
+
+library identifier: 'jenkins-shared-library@master', retriever: modernSCM(
+        [$class: 'GitSCMSource',
+         remote: 'https://gitlab.com/nanuchi/jenkins-shared-library.git',
+         credentialsId: 'gitlab-credentials'
+        ]
+)
+
+
 def gv
 
 pipeline {
@@ -13,16 +23,16 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    echo "building jar"
-                    //gv.buildJar()
+                    buildJar()
                 }
             }
         }
-        stage("build image") {
+        stage("build and push image") {
             steps {
                 script {
-                    echo "building image"
-                    //gv.buildImage()
+                    buildImage 'cloudnqt/demo-app:jma-3.0'
+                    dockerLogin()
+                    dockerPush 'cloudnqt/demo-app:jma-3.0'
                 }
             }
         }
@@ -34,5 +44,5 @@ pipeline {
                 }
             }
         }
-    }   
+    }
 }
